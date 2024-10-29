@@ -17,7 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.saswat10.network.KtorClient
 import com.saswat10.rnmapp.ui.theme.RnMAppTheme
-import com.saswat10.network.Character
+import com.saswat10.network.models.domain.Character
 
 class MainActivity : ComponentActivity() {
 
@@ -38,6 +38,9 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column(Modifier.padding(innerPadding)) {
                         Text(text = character?.name ?: "no character")
+                        Text(text = character?.species ?: "no character")
+                        Text(text = character?.gender?.displayName ?: "no character")
+                        Text(text = character?.created ?: "no character")
                     }
                 }
             }

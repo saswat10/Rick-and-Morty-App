@@ -1,5 +1,8 @@
 package com.saswat10.network
 
+import com.saswat10.network.models.domain.Character
+import com.saswat10.network.models.remote.RemoteCharacter
+import com.saswat10.network.models.remote.toDomainCharacter
 import io.ktor.client.*
 import io.ktor.client.call.body
 import io.ktor.client.engine.okhttp.OkHttp
@@ -10,7 +13,6 @@ import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.plugins.logging.SIMPLE
 import io.ktor.client.request.get
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 class KtorClient {
@@ -28,19 +30,9 @@ class KtorClient {
         }
     }
 
-    suspend fun getCharacter(id: Int): Character{
-        return client.get("character/$id").body()
+    suspend fun getCharacter(id: Int): Character {
+        return client.get("character/$id")
+            .body<RemoteCharacter>()
+            .toDomainCharacter()
     }
-}
-
-@Serializable
-data class Character(
-    val id: Int,
-    val name: String,
-    val origin: Origin
-){
-    @Serializable
-    data class Origin(
-        val name: String,
-    )
 }
