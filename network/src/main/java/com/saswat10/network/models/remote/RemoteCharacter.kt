@@ -42,7 +42,7 @@ fun RemoteCharacter.toDomainCharacter(): Character{
         else -> CharacterGender.Unknown
     }
 
-    val characterStatus = when(gender.lowercase()){
+    val characterStatus = when(status.lowercase()){
         "alive" -> CharacterStatus.Alive
         "dead" -> CharacterStatus.Dead
         else -> CharacterStatus.Unknown

@@ -22,6 +22,7 @@ private val DarkColorScheme = darkColorScheme(
     onTertiary = DraculaForeground,
     onBackground = DraculaForeground,
     onSurface = DraculaForeground,
+    error = DraculaRed
 )
 
 private val LightColorScheme = lightColorScheme(

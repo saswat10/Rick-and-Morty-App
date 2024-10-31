@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import com.saswat10.network.KtorClient
 import com.saswat10.rnmapp.ui.theme.RnMAppTheme
 import com.saswat10.network.models.domain.Character
+import com.saswat10.rnmapp.screens.CharacterDetailsScreen
 
 class MainActivity : ComponentActivity() {
 
@@ -28,19 +29,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
 
-            var character by remember { mutableStateOf<Character?>(null) }
-
-            LaunchedEffect(key1 =Unit, block = {
-                character = ktorClient.getCharacter(55)
-            })
-
             RnMAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column(Modifier.padding(innerPadding)) {
-                        Text(text = character?.name ?: "no character")
-                        Text(text = character?.species ?: "no character")
-                        Text(text = character?.gender?.displayName ?: "no character")
-                        Text(text = character?.created ?: "no character")
+                        CharacterDetailsScreen(ktorClient, 193)
                     }
                 }
             }
