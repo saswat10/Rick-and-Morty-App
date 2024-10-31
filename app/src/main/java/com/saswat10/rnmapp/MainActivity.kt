@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
             RnMAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Column(Modifier.padding(innerPadding)) {
-                        CharacterDetailsScreen(ktorClient, 58)
+                        CharacterDetailsScreen(ktorClient, 100)
                     }
                 }
             }
