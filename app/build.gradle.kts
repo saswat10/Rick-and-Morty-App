@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlinx-serialization")
 }
 
 android {
@@ -43,6 +44,11 @@ dependencies {
 
     implementation(project(":network"))
     implementation("io.coil-kt:coil-compose:2.5.0")
+
+    val navVersion = "2.8.3"
+    implementation("androidx.navigation:navigation-compose:$navVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

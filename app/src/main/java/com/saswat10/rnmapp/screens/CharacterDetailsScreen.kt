@@ -32,7 +32,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun CharacterDetailsScreen(
     ktorClient: KtorClient,
-    characterId: Int
+    characterId: Int,
+    onEpisodeClicked: (Int)->Unit
 ) {
     var character by remember { mutableStateOf<Character?>(null) }
 
@@ -103,7 +104,7 @@ fun CharacterDetailsScreen(
         //Button
         item {
             Button(
-                onClick = { print("Hello") },
+                onClick = { onEpisodeClicked(characterId) },
                 content = { Text(" View All Episodes") },
                 modifier = Modifier.fillMaxWidth()
             )
