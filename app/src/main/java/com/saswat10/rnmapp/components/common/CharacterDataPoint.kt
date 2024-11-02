@@ -24,7 +24,7 @@ fun DataPointComponent(
     dataPoint: DataPoint,
 ){
     Column(
-        modifier = Modifier.fillMaxWidth().padding(4.dp),
+        modifier = Modifier.padding(4.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.Start
     ) {

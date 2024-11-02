@@ -22,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.saswat10.network.KtorClient
 import com.saswat10.rnmapp.screens.CharacterDetailsScreen
+import com.saswat10.rnmapp.screens.CharacterEpisodeScreen
 import com.saswat10.rnmapp.ui.theme.RnMAppTheme
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
@@ -46,7 +47,7 @@ class MainActivity : ComponentActivity() {
                             startDestination = "character_details"
                         ) {
                             composable("character_details") {
-                                CharacterDetailsScreen(ktorClient, 4) {
+                                CharacterDetailsScreen(ktorClient, 3) {
                                     navController.navigate("character_episode/$it")
                                 }
                             }
@@ -56,7 +57,7 @@ class MainActivity : ComponentActivity() {
                             ) { backStackEntry ->
                                 val characterId: Int =
                                     backStackEntry.arguments?.getInt("characterId") ?: -1
-                                CharacterEpisodeScreen(characterId)
+                                CharacterEpisodeScreen(characterId, ktorClient)
                             }
                         }
 
@@ -66,18 +67,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-
-@Composable
-fun CharacterEpisodeScreen(characterId: Int) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text(text = "Character Episode Screen: $characterId", fontSize = 24.sp)
-    }
-}
-
-
-@Serializable
-data class CharacterDetailsScreen(
-    val ktorClient: @Contextual KtorClient,
-    val characterId: Int
-)

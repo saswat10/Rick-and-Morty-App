@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.saswat10.network.models.domain.CharacterStatus
+import com.saswat10.rnmapp.components.common.CharacterNameComponent
 import com.saswat10.rnmapp.ui.theme.DraculaOrange
 
 @Composable
@@ -27,12 +28,7 @@ fun CharacterNamePlateComponent(
         ) {
         CharacterStatusComponent(status)
         Spacer(Modifier.height(4.dp))
-        Text(
-            text = name,
-            style = MaterialTheme.typography.displayMedium,
-            fontWeight = FontWeight.SemiBold,
-            color = DraculaOrange
-        )
+        CharacterNameComponent(name)
     }
 
 }

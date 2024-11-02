@@ -1,8 +1,11 @@
 package com.saswat10.network
 
 import com.saswat10.network.models.domain.Character
+import com.saswat10.network.models.domain.Episode
 import com.saswat10.network.models.remote.RemoteCharacter
+import com.saswat10.network.models.remote.RemoteEpisode
 import com.saswat10.network.models.remote.toDomainCharacter
+import com.saswat10.network.models.remote.toDomainEpisode
 import io.ktor.client.*
 import io.ktor.client.call.body
 import io.ktor.client.engine.okhttp.OkHttp
@@ -39,6 +42,16 @@ class KtorClient {
             client.get("character/$id")
                 .body<RemoteCharacter>()
                 .toDomainCharacter()
+        }
+    }
+
+    suspend fun getEpisodes(episodeIds: List<Int>): ApiOperation<List<Episode>> {
+        val idCommaSeparated = episodeIds.joinToString(separator = ",")
+        return safeApiCall {
+
+            client.get("episode/$idCommaSeparated")
+                .body<List<RemoteEpisode>>()
+                .map { it.toDomainEpisode() }
         }
     }
 
