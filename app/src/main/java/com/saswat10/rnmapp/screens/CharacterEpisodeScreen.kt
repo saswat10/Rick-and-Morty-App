@@ -1,15 +1,12 @@
 package com.saswat10.rnmapp.screens
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -17,9 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,24 +29,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.saswat10.network.KtorClient
 import com.saswat10.network.models.domain.Character
-import com.saswat10.network.models.domain.DraculaYellow
 import com.saswat10.network.models.domain.Episode
-import com.saswat10.rnmapp.components.character.CharacterNamePlateComponent
 import com.saswat10.rnmapp.components.common.CharacterImage
 import com.saswat10.rnmapp.components.common.CharacterNameComponent
 import com.saswat10.rnmapp.components.common.DataPoint
 import com.saswat10.rnmapp.components.common.DataPointComponent
 import com.saswat10.rnmapp.components.common.LoadingIndicator
 import com.saswat10.rnmapp.components.episode.EpisodeListItem
-import com.saswat10.rnmapp.ui.theme.DraculaBackground
-import com.saswat10.rnmapp.ui.theme.DraculaComment
 import com.saswat10.rnmapp.ui.theme.DraculaCurrentLine
 import com.saswat10.rnmapp.ui.theme.DraculaForeground
-import com.saswat10.rnmapp.ui.theme.DraculaOrange
-import com.saswat10.rnmapp.ui.theme.DraculaPink
 import kotlinx.coroutines.launch
 
 @Composable
