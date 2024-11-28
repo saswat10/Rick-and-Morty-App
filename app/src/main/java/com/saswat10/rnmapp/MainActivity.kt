@@ -24,12 +24,16 @@ import com.saswat10.network.KtorClient
 import com.saswat10.rnmapp.screens.CharacterDetailsScreen
 import com.saswat10.rnmapp.screens.CharacterEpisodeScreen
 import com.saswat10.rnmapp.ui.theme.RnMAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val ktorClient = KtorClient()
+    @Inject
+    lateinit var ktorClient: KtorClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
