@@ -11,13 +11,14 @@ import coil.compose.SubcomposeAsyncImage
 
 @Composable
 fun CharacterImage(
+    modifier: Modifier,
     imageUrl : String,
     contentDesc: String
 ){
     SubcomposeAsyncImage(
         model = imageUrl,
         contentDescription = contentDesc,
-        modifier = Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(12.dp)),
+        modifier = modifier,
         loading = {
             LoadingIndicator()
         }

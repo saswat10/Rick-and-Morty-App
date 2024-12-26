@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -92,7 +93,16 @@ fun MainScreen(character: Character, episodes: List<Episode>) {
             }
         }
         item { Spacer(Modifier.height(8.dp)) }
-        item { CharacterImage(character.image, character.name) }
+        item {
+            CharacterImage(
+                Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
+                    .clip(RoundedCornerShape(12.dp)),
+                character.image,
+                character.name
+            )
+        }
         item { Spacer(Modifier.height(16.dp)) }
 
         episodeSeasonMap.forEach { mapEp ->
