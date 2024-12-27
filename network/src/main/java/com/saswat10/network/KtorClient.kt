@@ -2,9 +2,12 @@ package com.saswat10.network
 
 import com.saswat10.network.models.domain.Character
 import com.saswat10.network.models.domain.Episode
+import com.saswat10.network.models.domain.Page
 import com.saswat10.network.models.remote.RemoteCharacter
+import com.saswat10.network.models.remote.RemoteCharacterPage
 import com.saswat10.network.models.remote.RemoteEpisode
 import com.saswat10.network.models.remote.toDomainCharacter
+import com.saswat10.network.models.remote.toDomainCharacterPage
 import com.saswat10.network.models.remote.toDomainEpisode
 import io.ktor.client.*
 import io.ktor.client.call.body
@@ -67,6 +70,14 @@ class KtorClient {
                     .body<List<RemoteEpisode>>()
                     .map { it.toDomainEpisode() }
             }
+        }
+    }
+
+    suspend fun getCharacterByPage(pageNumber: Int): ApiOperation<Page>{
+        return safeApiCall {
+            client.get("character/?page=$pageNumber")
+                .body<RemoteCharacterPage>()
+                .toDomainCharacterPage()
         }
     }
 

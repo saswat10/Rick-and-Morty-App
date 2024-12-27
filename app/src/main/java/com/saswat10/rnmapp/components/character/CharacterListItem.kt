@@ -41,6 +41,8 @@ import com.saswat10.rnmapp.components.common.CharacterImage
 import com.saswat10.rnmapp.components.common.DataPoint
 import com.saswat10.rnmapp.components.common.DataPointComponent
 import com.saswat10.rnmapp.ui.theme.DraculaComment
+import com.saswat10.rnmapp.ui.theme.DraculaCurrentLine
+import com.saswat10.rnmapp.ui.theme.DraculaForeground
 import com.saswat10.rnmapp.ui.theme.DraculaGreen
 import com.saswat10.rnmapp.ui.theme.DraculaOrange
 
@@ -54,7 +56,7 @@ fun CharacterGridItem(
         modifier = modifier
             .border(
                 width = 1.dp,
-                brush = Brush.verticalGradient(listOf(Color.Transparent, DraculaGreen)),
+                brush = Brush.verticalGradient(listOf(Color.Transparent, DraculaOrange)),
                 shape = RoundedCornerShape(12.dp)
             )
             .clip(RoundedCornerShape(12.dp))
@@ -75,10 +77,11 @@ fun CharacterGridItem(
         Spacer(modifier = Modifier.height(12.dp))
         Text(
             text = character.name,
-            color = DraculaGreen,
+            color = DraculaOrange,
             fontWeight = FontWeight.SemiBold,
             fontSize = 20.sp,
             lineHeight = 26.sp,
+            textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(12.dp))
     }
@@ -140,7 +143,7 @@ fun CharacterStatusCircle(status: CharacterStatus) {
         modifier = Modifier
             .padding(top = 6.dp, start = 6.dp)
             .background(
-                brush = Brush.radialGradient(listOf(status.color, Color.Transparent)),
+                brush = Brush.radialGradient(listOf(Color.Black, Color.Transparent)),
                 shape = CircleShape
             )
             .size(18.dp),
@@ -154,7 +157,7 @@ fun CharacterStatusCircle(status: CharacterStatus) {
                     color = status.color,
                     shape = CircleShape
                 )
-                .size(8.dp)
+                .size(10.dp)
         )
     }
 }

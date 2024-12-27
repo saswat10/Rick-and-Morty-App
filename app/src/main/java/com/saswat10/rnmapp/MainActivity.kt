@@ -4,17 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -23,10 +17,9 @@ import androidx.navigation.navArgument
 import com.saswat10.network.KtorClient
 import com.saswat10.rnmapp.screens.CharacterDetailsScreen
 import com.saswat10.rnmapp.screens.CharacterEpisodeScreen
+import com.saswat10.rnmapp.screens.HomeScreen
 import com.saswat10.rnmapp.ui.theme.RnMAppTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.serialization.Contextual
-import kotlinx.serialization.Serializable
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -48,16 +41,32 @@ class MainActivity : ComponentActivity() {
 
                         NavHost(
                             navController = navController,
-                            startDestination = "character_details"
+                            startDestination = "home_screen"
                         ) {
-                            composable("character_details") {
-                                CharacterDetailsScreen(11) {
+                            composable("home_screen") {
+                                HomeScreen(
+                                    onCharacterSelected = { characterId ->
+                                        navController.navigate("character_details/$characterId")
+                                    }
+                                )
+                            }
+                            composable(
+                                route = "character_details/{characterId}",
+                                arguments = listOf(navArgument("characterId") {
+                                    type = NavType.IntType
+                                })
+                            ) { backStackEntry ->
+                                val characterId: Int =
+                                    backStackEntry.arguments?.getInt("characterId") ?: -1
+                                CharacterDetailsScreen(characterId) {
                                     navController.navigate("character_episode/$it")
                                 }
                             }
                             composable(
                                 route = "character_episode/{characterId}",
-                                arguments = listOf(navArgument("characterId"){type = NavType.IntType})
+                                arguments = listOf(navArgument("characterId") {
+                                    type = NavType.IntType
+                                })
                             ) { backStackEntry ->
                                 val characterId: Int =
                                     backStackEntry.arguments?.getInt("characterId") ?: -1
