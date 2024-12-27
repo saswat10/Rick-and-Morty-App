@@ -3,6 +3,7 @@ package com.saswat10.rnmapp.screens
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -24,6 +25,7 @@ import com.saswat10.network.models.domain.Character
 import com.saswat10.network.models.domain.Page
 import com.saswat10.rnmapp.components.character.CharacterGridItem
 import com.saswat10.rnmapp.components.common.LoadingIndicator
+import com.saswat10.rnmapp.components.common.Toolbar
 import com.saswat10.rnmapp.repositories.CharacterRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -72,7 +74,8 @@ class HomeScreenViewModel @Inject constructor(
         repository.fetchCharacterPage(pageNumber = nextPageIndex).onSuccess { characterPage ->
             fetchedCharacterPages.add(characterPage)
             _viewState.update { currentState ->
-                val currentCharacters = (currentState as? HomeScreenViewState.GridDisplay)?.characters ?: emptyList()
+                val currentCharacters =
+                    (currentState as? HomeScreenViewState.GridDisplay)?.characters ?: emptyList()
                 return@update HomeScreenViewState.GridDisplay(characters = currentCharacters + characterPage.characters)
             }
         }.onFailure {
@@ -112,23 +115,26 @@ fun HomeScreen(
             LoadingIndicator()
 
         is HomeScreenViewState.GridDisplay -> {
-            LazyVerticalGrid(
-                state = scrollState,
-                columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                content = {
-                    items(
-                        items = state.characters,
-                        key = { it.id }
-                    ) { character ->
-                        CharacterGridItem(modifier = Modifier, character = character) {
-                            onCharacterSelected(character.id)
+            Column {
+                Toolbar("All Characters")
+                LazyVerticalGrid(
+                    state = scrollState,
+                    columns = GridCells.Fixed(2),
+                    contentPadding = PaddingValues(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    content = {
+                        items(
+                            items = state.characters,
+                            key = { it.id }
+                        ) { character ->
+                            CharacterGridItem(modifier = Modifier, character = character) {
+                                onCharacterSelected(character.id)
+                            }
                         }
                     }
-                }
-            )
+                )
+            }
         }
     }
 }

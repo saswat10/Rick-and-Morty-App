@@ -1,6 +1,7 @@
 package com.saswat10.rnmapp.screens
 
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -34,6 +35,7 @@ import com.saswat10.rnmapp.components.common.CharacterImage
 import com.saswat10.rnmapp.components.common.DataPoint
 import com.saswat10.rnmapp.components.common.DataPointComponent
 import com.saswat10.rnmapp.components.common.LoadingIndicator
+import com.saswat10.rnmapp.components.common.Toolbar
 import com.saswat10.rnmapp.repositories.CharacterRepository
 import com.saswat10.rnmapp.ui.theme.DraculaForeground
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -97,7 +99,8 @@ class CharacterViewModel @Inject constructor(
 fun CharacterDetailsScreen(
     characterId: Int,
     viewModel: CharacterViewModel = hiltViewModel(),
-    onEpisodeClicked: (Int) -> Unit
+    onEpisodeClicked: (Int) -> Unit,
+    onBackClicked: ()->Unit
 ) {
 
     LaunchedEffect(key1 = Unit, block = {
@@ -106,68 +109,72 @@ fun CharacterDetailsScreen(
 
     val state by viewModel.stateFlow.collectAsState()
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(all = 16.dp)
-    ) {
-        when (val viewState = state) {
-            is CharacterDetailsViewState.Error -> TODO()
-            is CharacterDetailsViewState.Loading -> {
-                item {
-                    LoadingIndicator()
-                }
-            }
+    Column {
 
-            is CharacterDetailsViewState.Success -> {
-                item {
-                    CharacterNamePlateComponent(
-                        name = viewState.character.name,
-                        status = viewState.character.status
-                    )
+        Toolbar(title = "Character Details", onBackAction = {onBackClicked()})
+        LazyColumn(
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(all = 16.dp)
+        ) {
+            when (val viewState = state) {
+                is CharacterDetailsViewState.Error -> TODO()
+                is CharacterDetailsViewState.Loading -> {
+                    item {
+                        LoadingIndicator()
+                    }
                 }
 
-                item { Spacer(Modifier.height(8.dp)) }
-                // Image
-                item {
-                    CharacterImage(
-                        Modifier
-                            .aspectRatio(1f)
-                            .clip(RoundedCornerShape(12.dp)),
-                        viewState.character.image,
-                        viewState.character.name
-                    )
-                }
+                is CharacterDetailsViewState.Success -> {
 
-
-                item { Spacer(Modifier.height(8.dp)) }
-                // Data Points
-                items(viewState.characterDataPoints) {
-                    Spacer(Modifier.height(12.dp))
-                    DataPointComponent(it)
-                }
-
-                item { Spacer(Modifier.height(32.dp)) }
-                //Button
-                item {
-                    OutlinedButton(
-                        shape = RoundedCornerShape(6.dp),
-                        onClick = { onEpisodeClicked(characterId) }) {
-                        Text(
-                            "View All Episodes",
-                            modifier = Modifier
-                                .padding(8.dp)
-                                .fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            color = DraculaForeground
+                    item {
+                        CharacterNamePlateComponent(
+                            name = viewState.character.name,
+                            status = viewState.character.status
                         )
                     }
 
+                    item { Spacer(Modifier.height(8.dp)) }
+                    // Image
+                    item {
+                        CharacterImage(
+                            Modifier
+                                .aspectRatio(1f)
+                                .clip(RoundedCornerShape(12.dp)),
+                            viewState.character.image,
+                            viewState.character.name
+                        )
+                    }
+
+
+                    item { Spacer(Modifier.height(8.dp)) }
+                    // Data Points
+                    items(viewState.characterDataPoints) {
+                        Spacer(Modifier.height(12.dp))
+                        DataPointComponent(it)
+                    }
+
+                    item { Spacer(Modifier.height(32.dp)) }
+                    //Button
+                    item {
+                        OutlinedButton(
+                            shape = RoundedCornerShape(6.dp),
+                            onClick = { onEpisodeClicked(characterId) }) {
+                            Text(
+                                "View All Episodes",
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .fillMaxWidth(),
+                                textAlign = TextAlign.Center,
+                                color = DraculaForeground
+                            )
+                        }
+
+                    }
+
+                    item { Spacer(Modifier.height(64.dp)) }
                 }
 
-                item { Spacer(Modifier.height(64.dp)) }
             }
-
         }
     }
-
 }
