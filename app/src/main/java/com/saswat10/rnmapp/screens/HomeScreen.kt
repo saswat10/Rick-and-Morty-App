@@ -1,7 +1,6 @@
 package com.saswat10.rnmapp.screens
 
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,7 +8,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -22,7 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.saswat10.network.models.domain.Character
-import com.saswat10.network.models.domain.Page
+import com.saswat10.network.models.domain.CharacterPage
 import com.saswat10.rnmapp.components.character.CharacterGridItem
 import com.saswat10.rnmapp.components.common.LoadingIndicator
 import com.saswat10.rnmapp.components.common.Toolbar
@@ -51,7 +49,7 @@ class HomeScreenViewModel @Inject constructor(
     private val _viewState = MutableStateFlow<HomeScreenViewState>(HomeScreenViewState.Loading)
     val viewState: StateFlow<HomeScreenViewState> = _viewState.asStateFlow()
 
-    private val fetchedCharacterPages = mutableListOf<Page>()
+    private val fetchedCharacterPages = mutableListOf<CharacterPage>()
 
     fun fetchInitialPage() = viewModelScope.launch {
         if (fetchedCharacterPages.isNotEmpty()) return@launch

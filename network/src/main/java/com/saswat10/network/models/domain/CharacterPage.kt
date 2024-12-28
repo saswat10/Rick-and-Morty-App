@@ -1,6 +1,6 @@
 package com.saswat10.network.models.domain
 
-data class Page (
+data class CharacterPage (
     val info: Info,
     val characters: List<Character>
 ){

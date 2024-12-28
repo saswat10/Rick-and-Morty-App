@@ -2,13 +2,16 @@ package com.saswat10.network
 
 import com.saswat10.network.models.domain.Character
 import com.saswat10.network.models.domain.Episode
-import com.saswat10.network.models.domain.Page
+import com.saswat10.network.models.domain.CharacterPage
+import com.saswat10.network.models.domain.EpisodePage
 import com.saswat10.network.models.remote.RemoteCharacter
 import com.saswat10.network.models.remote.RemoteCharacterPage
 import com.saswat10.network.models.remote.RemoteEpisode
+import com.saswat10.network.models.remote.RemoteEpisodePage
 import com.saswat10.network.models.remote.toDomainCharacter
 import com.saswat10.network.models.remote.toDomainCharacterPage
 import com.saswat10.network.models.remote.toDomainEpisode
+import com.saswat10.network.models.remote.toDomainEpisodePage
 import io.ktor.client.*
 import io.ktor.client.call.body
 import io.ktor.client.engine.okhttp.OkHttp
@@ -73,12 +76,48 @@ class KtorClient {
         }
     }
 
-    suspend fun getCharacterByPage(pageNumber: Int): ApiOperation<Page>{
+    suspend fun getCharacterByPage(pageNumber: Int): ApiOperation<CharacterPage> {
         return safeApiCall {
             client.get("character/?page=$pageNumber")
                 .body<RemoteCharacterPage>()
                 .toDomainCharacterPage()
         }
+    }
+
+    suspend fun getEpisodesByPage(pageIndex: Int): ApiOperation<EpisodePage> {
+        return safeApiCall {
+            client.get("episode") {
+                url {
+                    parameters.append("page", pageIndex.toString())
+                }
+            }
+                .body<RemoteEpisodePage>()
+                .toDomainEpisodePage()
+        }
+    }
+
+    suspend fun getAllEpisodes(): ApiOperation<List<Episode>> {
+        val data = mutableListOf<Episode>()
+        var exception: Exception? = null
+
+        getEpisodesByPage(pageIndex = 1).onSuccess { firstPage ->
+            val totalPageCount = firstPage.info.pages
+            data.addAll(firstPage.episodes)
+
+            repeat(totalPageCount - 1) { index ->
+                getEpisodesByPage(pageIndex = index + 2).onSuccess { nextPage ->
+                    data.addAll(nextPage.episodes)
+                }.onFailure { error ->
+                    exception = error
+                }
+
+                if (exception != null) { return@onSuccess }
+            }
+        }.onFailure {
+            exception = it
+        }
+
+        return exception?.let { ApiOperation.Failure(it) } ?: ApiOperation.Success(data)
     }
 
     private inline fun <T> safeApiCall(apiCall: () -> T): ApiOperation<T> {
@@ -102,7 +141,9 @@ sealed interface ApiOperation<T> {
         }
     }
 
-    fun onSuccess(block: (T) -> Unit): ApiOperation<T> {
+    // this needs to be suspend in order to call
+    // getEpisodesByPage within getAllEpisodes
+    suspend fun onSuccess(block: suspend (T) -> Unit): ApiOperation<T> {
         if (this is Success) block(data)
         return this
     }
