@@ -10,9 +10,8 @@ class CharacterRepository @Inject constructor(private val ktorClient: KtorClient
 
     suspend fun fetchCharacterPage(
         pageNumber: Int,
-        params: Map<String, String> = emptyMap()
     ): ApiOperation<CharacterPage> {
-        return ktorClient.getCharacterByPage(pageNumber, params)
+        return ktorClient.getCharacterByPage(pageNumber)
     }
 
     suspend fun fetchCharacter(characterId: Int): ApiOperation<Character> {

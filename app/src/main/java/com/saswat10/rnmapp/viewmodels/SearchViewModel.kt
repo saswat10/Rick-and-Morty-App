@@ -5,6 +5,7 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.saswat10.network.models.domain.Character
+import com.saswat10.network.models.domain.CharacterStatus
 import com.saswat10.rnmapp.repositories.CharacterRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -28,13 +29,19 @@ sealed interface SearchState {
 }
 
 sealed interface ScreenState {
-    object Empty: ScreenState
-    object Loading: ScreenState
-    data class Error(val message: String): ScreenState
+    object Empty : ScreenState
+    object Loading : ScreenState
+    data class Error(val message: String) : ScreenState
     data class Content(
         val userQuery: String,
-        val results: List<Character>
-    ): ScreenState
+        val results: List<Character>,
+        val filterState: FilterState
+    ) : ScreenState {
+        data class FilterState(
+            val statuses: List<CharacterStatus>,
+            val selectedStatuses: List<CharacterStatus>
+        )
+    }
 }
 
 @HiltViewModel
@@ -57,8 +64,8 @@ class SearchViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     fun observeUserSearch() = viewModelScope.launch {
-        searchTextState.collectLatest { searchState->
-            when(searchState){
+        searchTextState.collectLatest { searchState ->
+            when (searchState) {
                 is SearchState.Empty -> _uiState.update { ScreenState.Empty }
 
                 is SearchState.userQuery -> searchAllCharacters(searchState.query)
@@ -66,14 +73,39 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    fun toggleStatus(status: CharacterStatus) {
+        _uiState.update {
+            val currentState = (it as? ScreenState.Content)?: return@update it
+            val currentSelectedStatuses =  currentState.filterState.selectedStatuses
+
+            val newStatuses = if(currentSelectedStatuses.contains(status)){
+                currentSelectedStatuses - status
+            }else{
+                currentSelectedStatuses + status
+            }
+
+            return@update currentState.copy(
+                filterState = currentState.filterState.copy(selectedStatuses = newStatuses)
+            )
+        }
+    }
+
     private fun searchAllCharacters(query: String) = viewModelScope.launch {
         _uiState.update { ScreenState.Loading }
         characterRepository.fetchAllCharacterByName(query)
-            .onSuccess {characters ->
-                _uiState.update { ScreenState.Content(
-                    userQuery = query,
-                    results = characters
-                ) }
+            .onSuccess { characters ->
+                val allStatuses =
+                    characters.map { it.status }.toSet().toList().sortedBy { it.displayName }
+                _uiState.update {
+                    ScreenState.Content(
+                        userQuery = query,
+                        results = characters,
+                        filterState = ScreenState.Content.FilterState(
+                            statuses = allStatuses,
+                            selectedStatuses = allStatuses
+                        )
+                    )
+                }
             }
             .onFailure {
                 _uiState.update { ScreenState.Error("No search results found") }

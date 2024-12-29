@@ -2,6 +2,7 @@ package com.saswat10.rnmapp.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,8 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -44,6 +47,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.saswat10.network.models.domain.Character
+import com.saswat10.network.models.domain.CharacterStatus
 import com.saswat10.rnmapp.components.character.CharacterListItem
 import com.saswat10.rnmapp.components.common.DataPoint
 import com.saswat10.rnmapp.components.common.Toolbar
@@ -52,12 +57,14 @@ import com.saswat10.rnmapp.ui.theme.DraculaCurrentLine
 import com.saswat10.rnmapp.ui.theme.DraculaForeground
 import com.saswat10.rnmapp.ui.theme.DraculaOrange
 import com.saswat10.rnmapp.ui.theme.DraculaPurple
+import com.saswat10.rnmapp.ui.theme.DraculaYellow
 import com.saswat10.rnmapp.viewmodels.ScreenState
 import com.saswat10.rnmapp.viewmodels.SearchViewModel
 
 @Composable
 fun SearchScreen(
-    viewModel: SearchViewModel = hiltViewModel()
+    viewModel: SearchViewModel = hiltViewModel(),
+//    onNavClikc
 ) {
     DisposableEffect(key1 = Unit) {
         val job = viewModel.observeUserSearch()
@@ -72,9 +79,10 @@ fun SearchScreen(
     ) {
         Toolbar("Search")
         AnimatedVisibility(visible = screenState is ScreenState.Loading) {
-            LinearProgressIndicator(modifier = Modifier
-                .height(6.dp)
-                .fillMaxWidth(),
+            LinearProgressIndicator(
+                modifier = Modifier
+                    .height(6.dp)
+                    .fillMaxWidth(),
                 color = DraculaOrange
             )
         }
@@ -125,7 +133,7 @@ fun SearchScreen(
             ScreenState.Loading -> {}
             is ScreenState.Content -> {
                 Column {
-                    SearchScreenContent(state)
+                    SearchScreenContent(state, viewModel::toggleStatus, )
                 }
             }
 
@@ -167,19 +175,69 @@ fun SearchScreen(
 }
 
 @Composable
-private fun SearchScreenContent(content: ScreenState.Content) {
+private fun SearchScreenContent(
+    content: ScreenState.Content,
+    onClicked: (CharacterStatus) -> Unit,
+//    navClick: (Int) -> Unit
+) {
     Text(
         text = "${content.results.size} results for query '${content.userQuery}'",
         modifier = Modifier.fillMaxWidth(),
         textAlign = TextAlign.Center,
         fontSize = 20.sp
     )
+    Spacer(Modifier.height(12.dp))
+
+    Row(
+        Modifier
+            .fillMaxWidth()
+            .padding(start = 12.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        content.filterState.statuses.forEach { status ->
+            val isSelected = content.filterState.selectedStatuses.contains(status)
+            val contentColor = if (isSelected) DraculaYellow else DraculaCurrentLine
+            val count = content.results.filter { it.status == status }.size
+            Row(
+                modifier = Modifier
+                    .border(
+                        color = contentColor,
+                        width = 1.dp,
+                        shape = RoundedCornerShape(4.dp)
+                    )
+                    .clickable { onClicked(status) }
+                    .clip(shape = RoundedCornerShape(4.dp)),
+            ) {
+                Text(
+                    text = count.toString(),
+                    textAlign = TextAlign.Center,
+                    fontSize = 20.sp,
+                    color = DraculaBackground,
+                    modifier = Modifier
+                        .background(contentColor)
+                        .padding(6.dp)
+                )
+                Text(
+                    text = status.displayName,
+                    textAlign = TextAlign.Center,
+                    fontSize = 20.sp,
+                    color = contentColor,
+                    modifier = Modifier.padding(6.dp)
+                )
+            }
+        }
+    }
+    Spacer(Modifier.height(8.dp))
+
     LazyColumn(
         contentPadding = PaddingValues(10.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp),
+        modifier = Modifier.clipToBounds()
     ) {
-        items(content.results) { character ->
-            val dataPoints = buildList<DataPoint> {
+        val filteredItems =
+            content.results.filter { content.filterState.selectedStatuses.contains(it.status) }
+        items(filteredItems, key = { character -> character.id }) { character ->
+            val dataPoints = buildList {
                 add(DataPoint("Last know location", character.location.name))
                 add(DataPoint("Species", character.species))
                 add(DataPoint("Gender", character.gender.displayName))
@@ -190,9 +248,9 @@ private fun SearchScreenContent(content: ScreenState.Content) {
                 add(DataPoint("Episode Count", character.episodeIds.size.toString()))
             }
             CharacterListItem(
-                modifier = Modifier,
+                modifier = Modifier.animateItem(),
                 character = character,
-                onClick = {},
+//                onClick = {navClick(character.id)},
                 characterDataPoint = dataPoints
             )
         }

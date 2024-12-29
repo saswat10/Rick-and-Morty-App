@@ -78,6 +78,15 @@ class KtorClient {
 
     suspend fun getCharacterByPage(
         pageNumber: Int,
+    ): ApiOperation<CharacterPage> {
+        return safeApiCall {
+            client.get("character/?page=$pageNumber")
+                .body<RemoteCharacterPage>()
+                .toDomainCharacterPage()
+        }
+    }
+    suspend fun getCharacterByPageQuery(
+        pageNumber: Int,
         queryParams: Map<String, String>
     ): ApiOperation<CharacterPage> {
         return safeApiCall {
@@ -134,13 +143,13 @@ class KtorClient {
         val data = mutableListOf<Character>()
         var exception: Exception? = null
 
-        getCharacterByPage(pageNumber = 1, mapOf("name" to searchQuery))
+        getCharacterByPageQuery(pageNumber = 1, mapOf("name" to searchQuery))
             .onSuccess { firstPage ->
                 val totalPageCount = firstPage.info.pages
                 data.addAll(firstPage.characters)
 
                 repeat(totalPageCount - 1) { index ->
-                    getCharacterByPage(pageNumber = index + 2, mapOf("name" to searchQuery))
+                    getCharacterByPageQuery(pageNumber = index + 2, mapOf("name" to searchQuery))
                         .onSuccess { nextPage ->
                             data.addAll(nextPage.characters)
                         }.onFailure { error ->
