@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.saswat10.rnmapp.ui.theme.DraculaOrange
@@ -22,13 +23,14 @@ data class DataPoint(
 @Composable
 fun DataPointComponent(
     dataPoint: DataPoint,
+    color: Color = DraculaOrange
 ){
     Column(
         modifier = Modifier.padding(4.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.Start
     ) {
-        Text(text = dataPoint.title, style = MaterialTheme.typography.labelLarge, color = DraculaOrange)
+        Text(text = dataPoint.title, style = MaterialTheme.typography.labelLarge, color = color)
         Text(text = dataPoint.content, style = MaterialTheme.typography.titleLarge)
     }
 }

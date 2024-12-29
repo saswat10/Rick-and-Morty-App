@@ -45,6 +45,9 @@ import com.saswat10.rnmapp.ui.theme.DraculaCurrentLine
 import com.saswat10.rnmapp.ui.theme.DraculaForeground
 import com.saswat10.rnmapp.ui.theme.DraculaGreen
 import com.saswat10.rnmapp.ui.theme.DraculaOrange
+import com.saswat10.rnmapp.ui.theme.DraculaPink
+import com.saswat10.rnmapp.ui.theme.DraculaPurple
+import com.saswat10.rnmapp.ui.theme.DraculaRed
 
 @Composable
 fun CharacterGridItem(
@@ -99,7 +102,7 @@ fun CharacterListItem(
         modifier = modifier
             .border(
                 width = 1.dp,
-                brush = Brush.horizontalGradient(listOf(Color.Transparent, DraculaOrange)),
+                brush = Brush.horizontalGradient(listOf(Color.Transparent, DraculaPurple)),
                 shape = RoundedCornerShape(12.dp)
             )
             .clip(RoundedCornerShape(12.dp))
@@ -128,7 +131,7 @@ fun CharacterListItem(
                         verticalArrangement = Arrangement.Center,
                         modifier = Modifier.padding(end = 10.dp)
                     ) {
-                        DataPointComponent(sanitizeDataPoint(dataPoint = dataPoint))
+                        DataPointComponent(sanitizeDataPoint(dataPoint = dataPoint), DraculaPink)
                     }
                 }
             })
