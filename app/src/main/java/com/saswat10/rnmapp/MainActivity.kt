@@ -42,6 +42,7 @@ import com.saswat10.rnmapp.screens.AllEpisodesScreen
 import com.saswat10.rnmapp.screens.CharacterDetailsScreen
 import com.saswat10.rnmapp.screens.CharacterEpisodeScreen
 import com.saswat10.rnmapp.screens.HomeScreen
+import com.saswat10.rnmapp.screens.SearchScreen
 import com.saswat10.rnmapp.ui.theme.DraculaBackground
 import com.saswat10.rnmapp.ui.theme.DraculaComment
 import com.saswat10.rnmapp.ui.theme.DraculaCurrentLine
@@ -171,7 +172,7 @@ class MainActivity : ComponentActivity() {
                             composable(
                                 route = NavDestination.Search.route
                             ) {
-                                Text("Search Screen")
+                                SearchScreen()
                             }
                         }
 
