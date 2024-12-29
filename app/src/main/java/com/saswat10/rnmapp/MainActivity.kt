@@ -38,6 +38,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.saswat10.network.KtorClient
 import com.saswat10.network.models.domain.DraculaYellow
+import com.saswat10.rnmapp.screens.AllEpisodesScreen
 import com.saswat10.rnmapp.screens.CharacterDetailsScreen
 import com.saswat10.rnmapp.screens.CharacterEpisodeScreen
 import com.saswat10.rnmapp.screens.HomeScreen
@@ -165,7 +166,7 @@ class MainActivity : ComponentActivity() {
                             composable(
                                 route = NavDestination.Episodes.route
                             ) {
-                                Text("Episodes Screen")
+                                AllEpisodesScreen()
                             }
                             composable(
                                 route = NavDestination.Search.route
