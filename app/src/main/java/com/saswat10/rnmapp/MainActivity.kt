@@ -172,7 +172,7 @@ class MainActivity : ComponentActivity() {
                             composable(
                                 route = NavDestination.Search.route
                             ) {
-                                SearchScreen()
+                                SearchScreen(navController = navController)
                             }
                         }
 

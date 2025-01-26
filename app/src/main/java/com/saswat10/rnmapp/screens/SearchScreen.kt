@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.saswat10.network.models.domain.Character
 import com.saswat10.network.models.domain.CharacterStatus
 import com.saswat10.rnmapp.components.character.CharacterListItem
@@ -64,7 +65,7 @@ import com.saswat10.rnmapp.viewmodels.SearchViewModel
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel(),
-//    onNavClikc
+    navController: NavController
 ) {
     DisposableEffect(key1 = Unit) {
         val job = viewModel.observeUserSearch()
@@ -133,7 +134,10 @@ fun SearchScreen(
             ScreenState.Loading -> {}
             is ScreenState.Content -> {
                 Column {
-                    SearchScreenContent(state, viewModel::toggleStatus, )
+                    SearchScreenContent(
+                        state, viewModel::toggleStatus,
+                        navController = navController
+                    )
                 }
             }
 
@@ -178,7 +182,7 @@ fun SearchScreen(
 private fun SearchScreenContent(
     content: ScreenState.Content,
     onClicked: (CharacterStatus) -> Unit,
-//    navClick: (Int) -> Unit
+    navController: NavController
 ) {
     Text(
         text = "${content.results.size} results for query '${content.userQuery}'",
@@ -250,7 +254,7 @@ private fun SearchScreenContent(
             CharacterListItem(
                 modifier = Modifier.animateItem(),
                 character = character,
-//                onClick = {navClick(character.id)},
+                onClick = {navController.navigate("character_details/${character.id}")},
                 characterDataPoint = dataPoints
             )
         }

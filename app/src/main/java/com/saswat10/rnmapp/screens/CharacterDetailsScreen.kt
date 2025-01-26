@@ -55,7 +55,10 @@ fun CharacterDetailsScreen(
             contentPadding = PaddingValues(all = 16.dp)
         ) {
             when (val viewState = state) {
-                is CharacterDetailsViewState.Error -> TODO()
+                is CharacterDetailsViewState.Error -> {
+                    item { Text("Error") }
+                }
+
                 is CharacterDetailsViewState.Loading -> {
                     item {
                         LoadingIndicator()

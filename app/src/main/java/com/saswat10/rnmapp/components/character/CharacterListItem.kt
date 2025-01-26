@@ -95,7 +95,7 @@ fun CharacterGridItem(
 fun CharacterListItem(
     modifier: Modifier,
     character: Character,
-//    onClick: () -> Unit,
+    onClick: () -> Unit,
     characterDataPoint: List<DataPoint>
 ) {
     Row(
@@ -106,7 +106,7 @@ fun CharacterListItem(
                 shape = RoundedCornerShape(12.dp)
             )
             .clip(RoundedCornerShape(12.dp))
-//            .clickable { onClick() }
+            .clickable { onClick() }
             .height(140.dp),
     ) {
         Box {

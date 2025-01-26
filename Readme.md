@@ -1,12 +1,16 @@
-# Rick and Morty Mobile App
+#  Rick and Morty Mobile App
+
 
 ## Overview
+
+[<img src="/images%2Ficon.png" width="60" height="60" />](apk%2Fapp-debug.apk)
 
 This mobile application is built using **Kotlin** and **Jetpack Compose**, leveraging the **Rick and
 Morty API** to provide a seamless browsing experience for fans of the show. The app follows the *
 *Model-View-ViewModel (MVVM)** architectural pattern, ensuring a clean and maintainable codebase.
 Users can search, filter, and explore the show's characters, episodes, and other details through an
 intuitive and visually appealing interface.
+
 
 ---
 
